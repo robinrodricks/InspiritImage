@@ -1,0 +1,190 @@
+<languageVersion : 1.0;>
+
+kernel MedianSimple
+<   namespace: "ru.inspirit";
+	vendor: "Eugene Zatepyakin & Mario Klingemann";
+    version : 1;
+    description : "Median Filter: 5x5";
+>
+{
+    input image4 src;
+    output pixel4 dst;
+
+	//
+	// Optimized by Mario Klingemann
+	// http://www.quasimondo.com
+	//
+
+     #define comp(a,b) swap = max( a, b ); b += a; b-= swap; a = swap;
+
+    void evaluatePixel()
+    {
+        float one = 1.0;
+        float2 pos = outCoord();
+        dst = sampleNearest(src, pos );
+        float3 p12 = dst.rgb;
+        pos.x -= one ;
+        float3 p11 = sampleNearest(src, pos ).rgb;
+        pos.y -= one ;
+        float3 p6 = sampleNearest(src, pos ).rgb;
+        pos.x += one;
+        float3 p7 = sampleNearest(src, pos ).rgb;
+        pos.x += one;
+        float3 p8 = sampleNearest(src, pos ).rgb;
+        pos.y += one;
+        float3 p13 = sampleNearest(src, pos ).rgb;
+        pos.y += one;
+        float3 p18 = sampleNearest(src, pos ).rgb;
+        pos.x -= one;
+        float3 p17 = sampleNearest(src, pos ).rgb;
+        pos.x -= one;
+        float3 p16 = sampleNearest(src, pos ).rgb;
+        pos.x -= one;
+        float3 p15 = sampleNearest(src, pos ).rgb;
+        pos.y -= one;
+        float3 p10 = sampleNearest(src, pos ).rgb;
+        pos.y -= one;
+        float3 p5 = sampleNearest(src, pos ).rgb;
+        pos.y -= one;
+        float3 p0 = sampleNearest(src, pos ).rgb;
+        pos.x += one;
+        float3 p1 = sampleNearest(src, pos ).rgb;
+        pos.x += one;
+        float3 p2 = sampleNearest(src, pos ).rgb;
+        pos.x += one;
+        float3 p3 = sampleNearest(src, pos ).rgb;
+        pos.x += one;
+        float3 p4 = sampleNearest(src, pos ).rgb;
+        pos.y += one;
+        float3 p9 = sampleNearest(src, pos ).rgb;
+        pos.y += one;
+        float3 p14 = sampleNearest(src, pos ).rgb;
+        pos.y += one;
+        float3 p19 = sampleNearest(src, pos ).rgb;
+        pos.y += one;
+        float3 p24 = sampleNearest(src, pos ).rgb;
+        pos.x -= one;
+        float3 p23 = sampleNearest(src, pos ).rgb;
+        pos.x -= one;
+        float3 p22 = sampleNearest(src, pos ).rgb;
+        pos.x -= one;
+        float3 p21 = sampleNearest(src, pos ).rgb;
+        pos.x -= one;
+        float3 p20 = sampleNearest(src, pos ).rgb;
+
+        float3 swap;
+
+		/*----------------------------------------------------------------------------
+		   Function :   opt_med25()
+		   In       :   pointer to an array of 25 pixelvalues
+		   Out      :   a pixelvalue
+		   Job      :   optimized search of the median of 25 pixelvalues
+		   Notice   :   in theory, cannot go faster without assumptions on the
+		                signal.
+		  				Code taken from Graphic Gems.
+		 ---------------------------------------------------------------------------*/
+
+        comp(p0, p1);
+        comp(p3, p4);
+        comp(p2, p4);
+        comp(p2, p3);
+        comp(p6, p7);
+        comp(p5, p7);
+        comp(p5, p6);
+        comp(p9, p10);
+        comp(p8, p10);
+        comp(p8, p9);
+        comp(p12, p13);
+        comp(p11, p13);
+        comp(p11, p12);
+        comp(p15, p16);
+        comp(p14, p16);
+        comp(p14, p15);
+        comp(p18, p19);
+        comp(p17, p19);
+        comp(p17, p18);
+        comp(p21, p22);
+        comp(p20, p22);
+        comp(p20, p21);
+        comp(p23, p24);
+        comp(p2, p5);
+        comp(p3, p6);
+        comp(p0, p6);
+        comp(p0, p3);
+        comp(p4, p7);
+        comp(p1, p7);
+        comp(p1, p4);
+        comp(p11, p14);
+        comp(p8, p14);
+        comp(p8, p11);
+        comp(p12, p15);
+        comp(p9, p15);
+        comp(p9, p12);
+        comp(p13, p16);
+        comp(p10, p16);
+        comp(p10, p13);
+        comp(p20, p23);
+        comp(p17, p23);
+        comp(p17, p20);
+        comp(p21, p24);
+        comp(p18, p24);
+        comp(p18, p21);
+        comp(p19, p22);
+        comp(p8, p17);
+        comp(p9, p18);
+        comp(p0, p18);
+        comp(p0, p9);
+        comp(p10, p19);
+        comp(p1, p19);
+        comp(p1, p10);
+        comp(p11, p20);
+        comp(p2, p20);
+        comp(p2, p11);
+        comp(p12, p21);
+        comp(p3, p21);
+        comp(p3, p12);
+        comp(p13, p22);
+        comp(p4, p22);
+        comp(p4, p13);
+        comp(p14, p23);
+        comp(p5, p23);
+        comp(p5, p14);
+        comp(p15, p24);
+        comp(p6, p24);
+        comp(p6, p15);
+        comp(p7, p16);
+        comp(p7, p19);
+        comp(p13, p21);
+        comp(p15, p23);
+        comp(p7, p13);
+        comp(p7, p15);
+        comp(p1, p9);
+        comp(p3, p11);
+        comp(p5, p17);
+        comp(p11, p17);
+        comp(p9, p17);
+        comp(p4, p10);
+        comp(p6, p12);
+        comp(p7, p14);
+        comp(p4, p6);
+        comp(p4, p7);
+        comp(p12, p14);
+        comp(p10, p14);
+        comp(p6, p7);
+        comp(p10, p12);
+        comp(p6, p10);
+        comp(p6, p17);
+        comp(p12, p17);
+        comp(p7, p17);
+        comp(p7, p10);
+        comp(p12, p18);
+        comp(p7, p12);
+        comp(p10, p18);
+        comp(p12, p20);
+        comp(p10, p20);
+        comp(p10, p12);
+        // Apply Median value to output.
+        dst.rgb = p12;
+
+    }
+}

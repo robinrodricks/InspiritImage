@@ -1,0 +1,81 @@
+<languageVersion : 1.0;>
+
+kernel MedianSimple
+<   namespace: "ru.inspirit";
+	vendor: "Eugene Zatepyakin & Mario Klingemann";
+    version : 1;
+    description : "Median Filter: 3x3";
+>
+{
+    input image4 src;
+    output pixel4 dst;
+
+	//
+	// Optimized by Mario Klingemann
+	// http://www.quasimondo.com
+	//
+
+    #define comp(a,b) swap = max( a, b ); b += a; b-= swap; a = swap;
+
+    void evaluatePixel()
+    {
+        float one = 1.0;
+        float2 pos = outCoord();
+        dst = sampleNearest(src, pos );
+        float3 p4 = dst.rgb;
+        pos.x -= one;
+        float3 p3 = sampleNearest(src, pos ).rgb;
+        pos.y -= one;
+        float3 p0 = sampleNearest(src, pos ).rgb;
+        pos.x += one;
+        float3 p1 = sampleNearest(src, pos ).rgb;
+        pos.x += one;
+        float3 p2 = sampleNearest(src, pos ).rgb;
+        pos.y += one;
+        float3 p5 = sampleNearest(src, pos ).rgb;
+        pos.y += one;
+        float3 p8 = sampleNearest(src, pos ).rgb;
+        pos.x -= one;
+        float3 p7 = sampleNearest(src, pos ).rgb;
+        pos.x -= one;
+        float3 p6 = sampleNearest(src, pos ).rgb;
+
+        float3 swap;
+
+        /*----------------------------------------------------------------------------
+           Job      :   optimized search of the median of 9 pixelvalues
+           Notice   :   in theory, cannot go faster without assumptions on the
+                        signal.
+                        Formula from:
+                        XILINX XCELL magazine, vol. 23 by John L. Smith
+
+                        The input array is modified in the process
+                        The result array is guaranteed to contain the median
+                        value
+                        in middle position, but other elements are NOT sorted.
+         ---------------------------------------------------------------------------*/
+
+        comp(p1, p2);
+        comp(p4, p5);
+        comp(p7, p8);
+        comp(p0, p1);
+        comp(p3, p4) ;
+        comp(p6, p7);
+        comp(p1, p2);
+        comp(p4, p5);
+        comp(p7, p8);
+        comp(p0, p3);
+        comp(p5, p8);
+        comp(p4, p7);
+        comp(p3, p6);
+        comp(p1, p4);
+        comp(p2, p5);
+        comp(p4, p7);
+        comp(p4, p2);
+        comp(p6, p4);
+        comp(p4, p2);
+
+        dst.rgb = p4;
+
+    }
+}

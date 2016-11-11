@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ASFFT" default="default" basedir="../">
+	
+	<condition property="exe" value=".exe">
+		<os family="windows"/>
+	</condition>
+	<condition property="exe" value="">
+		<os family="unix"/>
+	</condition>
+	
+	<condition property="FLEX_HOME" value="E:/FLEX_SDK_3">
+		<os family="windows"/>
+	</condition>
+	<condition property="FLEX_HOME" value="/VOLUMES/WORK/FLEX_SDK">
+		<os family="unix"/>
+	</condition>
+	
+	<property name="dir.build" value="${basedir}/build"/>
+	<property name="dir.src" value="${basedir}/src"/>
+	<property name="dir.bin" value="${basedir}/bin"/>
+	<property name="dir.lib" value="${basedir}/clib"/>
+	
+	<property file="${dir.build}/build.properties"/>
+	
+	<fail unless="FLEX_HOME"/>
+	<fail unless="flex.frameworks"/>
+	<fail unless="flex.bin"/>
+	<fail unless="flex.libs"/>
+	<fail unless="flex.compc"/>
+	<fail unless="flex.mxmlc"/>
+	<fail unless="flex.asdoc"/>
+	
+    <target name="default" depends="tdsi">
+    	
+	</target>
+	
+	<target name="clean">
+		<delete failonerror="false" file="${dir.bin}/ASFFT.swc"/>
+	</target>
+	
+    <target name="compile" depends="clean">
+    	<exec executable="${flex.compc}">
+			<arg line="-define=CONFIG::Debug,false"/>
+			<arg line="-define+=CONFIG::Release,true"/>
+			<arg line="-strict"/>
+			<arg line="-optimize"/>
+    		<arg line="-target-player=10"/>
+			<arg line="-o '${dir.bin}/ASFFT.swc'"/>
+			<arg line="-el '${flex.libs}/player/10/playerglobal.swc'"/>
+			<arg line="-l '${basedir}/clib/fft.swc'"/>
+			<arg line="-sp '${dir.src}'"/>
+			<arg line="-is '${dir.src}'"/>
+		</exec>
+	</target>
+	
+	<target name="tdsi" depends="compile">
+		<java jar="${dir.build}/tdsi.jar" fork="true" failonerror="true" maxmemory="128m">
+			<arg value="-input"/>
+			<arg value="${dir.bin}/ASFFT.swc"/>
+			<arg value="-output"/>
+			<arg value="${dir.bin}/ASFFT.swc"/>
+			<classpath>
+				<pathelement location="${dir.build}/tdsi.jar"/>
+				<pathelement path="${java.class.path}"/>
+			</classpath>
+		</java>
+	</target>
+	
+</project>

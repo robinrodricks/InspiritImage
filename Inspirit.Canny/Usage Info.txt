@@ -1,0 +1,18 @@
+// init Canny Detector instance
+// i would recommend pre-init instance outside loops for better performance
+
+var canny:CannyEdgeDetector = new CannyEdgeDetector();
+
+// run Edges detection
+// please note that source image should be GrayScaled before you run
+// detection process. (only BLUE channel data is used)
+
+// you also can control different detection options (via properties):
+// lowThreshold - min edges threshold value to be processed
+// highThreshold - max edges threshold value to be processed
+
+/**
+* @param imgPtr        mem offset to image data (uchar)
+* @param edgPtr        mem offset to edges data (int)
+*/
+canny.detect(imgPtr, edgPtr, width, height);

@@ -1,0 +1,5 @@
+#Fri Apr 02 22:10:34 MSD 2010
+com.powerflasher.fdt.core.DefaultOutputFolder=bin
+com.powerflasher.fdt.core.Language=AS3
+com.powerflasher.fdt.core.LanguageType=FLEX_SDK
+eclipse.preferences.version=1

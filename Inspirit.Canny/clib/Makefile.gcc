@@ -1,0 +1,26 @@
+CC      = gcc
+CFLAGS  = -O3 -Wall
+LDFLAGS = -O3 -Wall
+LDLIBS  = 
+
+PROG  = canny.swc
+
+# Files extensions .c, .o
+SUFFIXES = .c .o 
+.SUFFIXES: $(SUFFIXES) .
+
+# Object files .o necessary to build the main program
+OBJS  = canny.o 
+ 
+all: $(PROG)
+
+# Compilation and link
+$(PROG): $(OBJS)
+	$(CC) $(LDFLAGS) $(OBJS) -swc -o $(PROG) $(LDLIBS)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	-rm -f $(PROG)
+	-rm -f *.o

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="FluidSolver3D" default="main" basedir="../">
+	<target name="main">
+		<java jar="${basedir}/build/tdsi.jar" fork="true" failonerror="true" maxmemory="128m">
+			<arg line="-input '${basedir}/bin/FluidSolver3D.swf'"/>
+			<arg line="-output '${basedir}/bin/FluidSolver3D.swf'"/>
+			<classpath>
+				<pathelement location="${basedir}/build/tdsi.jar"/>
+				<pathelement path="${java.class.path}"/>
+			</classpath>
+		</java>
+	</target>
+</project>
